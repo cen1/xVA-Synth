@@ -760,7 +760,7 @@ class xVAPitch(object):
                              ",".join([str(v) for v in em_happy]) + "\n" + \
                              ",".join([str(v) for v in em_sad]) + "\n" + \
                              ",".join([str(v) for v in em_surprise]) + "\n" + \
-                             json.dumps(editorStyles)
+                             json.dumps(editorStyles if editor_data is not None else None)
 
         del pitch_pred, dur_pred, energy_pred, em_angry, em_happy, em_sad, em_surprise, text, sequence
         return editor_values_text +"\n"+all_cleaned_text +"\n"+ f'{start_index}\n{end_index}'

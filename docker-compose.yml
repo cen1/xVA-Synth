@@ -1,0 +1,8 @@
+services:
+  xvasynth:
+    build: .
+    ports:
+      - "8008:8008"
+    volumes:
+      - ./resources:/app/resources
+    restart: unless-stopped

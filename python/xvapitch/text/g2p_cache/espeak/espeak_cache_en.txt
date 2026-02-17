@@ -21324,6 +21324,7 @@ numbskull|n ˈʌ m b s k ʌ l
 numerously|n ˈuː m ɚ ɹ ə s l i
 numidium|n uː m ˈɪ d iə m
 numinex|n ˈuː m aɪ n ˌɛ k s
+numpy|n ˈʌ m p i
 nun|n ˈʌ n
 nunon|n ˈʌ n ɑː n
 nura|n j ˈʊɹ ɹ ə
@@ -25455,6 +25456,7 @@ rockpile|ɹ ˈɑː k p aɪ l
 rocks|ɹ ˈɑː k s
 rockshatter|ɹ ˈɑː k ʃ æ ɾ ɚ
 rocksplinter|ɹ ˈɑː k s p l ɪ n t ɚ
+rocm| ɹ ˈɑː k ə m
 rocwane|ɹ ˈɑː k w eɪ n
 rod|ɹ ˈɑː d
 rodents'|ɹ ˈoʊ d ə n t s

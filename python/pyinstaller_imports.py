@@ -16,16 +16,18 @@ try:
     # import scipy.optimize.line_search
     import sklearn
     import sklearn.utils._cython_blas
-    import sklearn.neighbors.typedefs
-    import sklearn.neighbors.quad_tree
+    import sklearn.neighbors
     import sklearn.tree
     import sklearn.tree._utils
 except:
     print("==== scipy")
     print(traceback.format_exc())
 
-from PyInstaller.utils.hooks import collect_data_files
-datas = collect_data_files('sklearn')
+try:
+    from PyInstaller.utils.hooks import collect_data_files
+    datas = collect_data_files('sklearn')
+except ImportError:
+    pass
 
 try:
     import librosa

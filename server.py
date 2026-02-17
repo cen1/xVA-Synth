@@ -3,7 +3,6 @@ import sys
 import traceback
 import multiprocessing
 
-torch_dml_device = None
 
 if __name__ == '__main__':
     server = None
@@ -93,17 +92,6 @@ if __name__ == '__main__':
         except:
             pass
 
-    if CPU_ONLY:
-        try:
-            import torch_directml
-            torch_dml_device = torch_directml.device()
-            logger.info("Successfully got the torch DirectML device")
-        except Exception as e:
-            # I've implemented support for DirectML, but at the time of writing (08/04/2023, v0.1.13.1.dev230301), it's hella broken...
-            # Not a single model can successfully .forward() when switching to DirectML device from cpu. I'm leaving in the code however,
-            # as I'd still like to add support for it once things are more stable. This try/catch should run ok when it's installed
-            torch_dml_device = torch.device("cpu")
-            logger.exception("Failed to get torch DirectML; falling back to cpu device")
     # ========================
 
 
@@ -224,9 +212,6 @@ if __name__ == '__main__':
                     if post_data["device"] == "cpu":
                         logger.info("Setting torch device to CPU")
                         device = torch.device("cpu")
-                    elif CPU_ONLY:
-                        logger.info("Setting torch device to DirectML")
-                        device = torch_dml_device
                     else:
                         logger.info("Setting torch device to CUDA")
                         device = torch.device("cuda:0")
@@ -292,7 +277,7 @@ if __name__ == '__main__':
                             continue_synth = False
 
                     device = post_data["device"] if "device" in post_data else models_manager.device_label
-                    device = torch.device("cpu") if device=="cpu" else (torch_dml_device if CPU_ONLY else torch.device("cuda:0"))
+                    device = torch.device("cpu") if device=="cpu" else (torch.device("cuda:0"))
                     models_manager.set_device(device, instance_index=instance_index)
 
                     if continue_synth:
@@ -483,7 +468,7 @@ if __name__ == '__main__':
 
                 if self.path == "/checkReady":
                     modelsPaths = json.loads(post_data["modelsPaths"])
-                    device = torch.device("cpu") if post_data["device"]=="cpu" else (torch_dml_device if CPU_ONLY else torch.device("cuda:0"))
+                    device = torch.device("cpu") if post_data["device"]=="cpu" else (torch.device("cuda:0"))
                     models_manager.set_device(device)
                     req_response = "ready"
 
@@ -514,21 +499,18 @@ if __name__ == '__main__':
 
 
     try:
-        # server = HTTPServer(("",8008), Handler)
+        ThreadedHTTPServer.allow_reuse_address = True
         server = ThreadedHTTPServer(("",8008), Handler)
-        # Prevent issues with socket reuse
-        server.allow_reuse_address = True
-    except:
-        with open("./DEBUG_server_error.txt", "w+") as f:
-            f.write(traceback.format_exc())
+    except OSError as e:
         logger.info(traceback.format_exc())
+        print(f"Error: {e}")
+        sys.exit(1)
+
     try:
         plugin_manager.run_plugins(plist=plugin_manager.plugins["start"]["post"], event="post start", data=None)
         print("Server ready")
         logger.info("Server ready")
         server.serve_forever()
-
-
     except KeyboardInterrupt:
         pass
     server.server_close()

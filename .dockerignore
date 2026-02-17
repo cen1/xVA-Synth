@@ -1,0 +1,13 @@
+.git/
+.claude/
+node_modules/
+__pycache__/
+resources/
+env*/
+build/
+dist/
+*.log
+*.wav
+*.mp3
+*.ogg
+*.zip
